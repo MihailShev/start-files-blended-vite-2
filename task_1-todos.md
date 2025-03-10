@@ -144,7 +144,7 @@ const todos = [
 
 - `isEditing` - буль, що сигнілізує чи можливо включити "режим редагування"
 
-  > В залежності від значення ми будемо показувати або `<SearchForm/>`, або
+  > В залежності від значення ми будемо показувати або `<Form/>`, або
   > `<EditForm/>`
 
 - `currentTodo` - об'єкт, який буде в собі зберігати інформацію про тудушку яку
@@ -164,8 +164,12 @@ const todos = [
     <Text textAlign="center" marginBottom="20">
       TODO #1
     </Text>
-    <Text>Some description</Text>
-    <button className={style.deleteButton} type="button">
+    <Text>{text}</Text>
+    <button
+      className={style.deleteButton}
+      onClick={() => onDelete(id)}
+      type="button"
+    >
       <RiDeleteBinLine size={24} />
     </button>
 

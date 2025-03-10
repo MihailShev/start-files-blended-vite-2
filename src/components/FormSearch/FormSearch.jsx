@@ -1,15 +1,14 @@
 import { FiSearch } from 'react-icons/fi';
-import style from './Form.module.css';
-import { nanoid } from 'nanoid';
+import style from './FormSearch.module.css';
 
-const Form = ({ onAdd }) => {
+const FormSearch = ({ addSerchValue }) => {
   const handleCghange = e => {
     e.preventDefault();
     const value = e.target.elements.search.value.trim();
 
     if (!value) return;
 
-    onAdd({ id: nanoid(), text: value });
+    addSerchValue(value);
     e.target.reset();
   };
 
@@ -32,4 +31,4 @@ const Form = ({ onAdd }) => {
   );
 };
 
-export default Form;
+export default FormSearch;
