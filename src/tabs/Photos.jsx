@@ -10,41 +10,9 @@ const Photos = () => {
   const [page, setPage] = useState(1);
   const [err, setErr] = useState('');
   const [loader, setLoader] = useState(false);
+  const [imagesEmpty, setImagesEmpty] = useState(false);
 
-  const [images, setImages] = useState(() => {
-    return [
-      {
-        id: 3573351,
-        avg_color: '#374824',
-        src: {
-          original:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png',
-          large:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&h=650&w=940',
-          medium:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&h=350',
-          small:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&h=130',
-        },
-        alt: 'Brown Rocks During Golden Hour',
-      },
-      {
-        id: 35733515,
-        avg_color: '#374824',
-        src: {
-          original:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png',
-          large:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&h=650&w=940',
-          medium:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&h=350',
-          small:
-            'https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&h=130',
-        },
-        alt: 'Brown Rocks During Golden Hour',
-      },
-    ];
-  });
+  const [images, setImages] = useState([]);
 
   const visibleLoader = () => setLoader(true);
   const hideLoader = () => setLoader(false);
@@ -60,10 +28,18 @@ const Photos = () => {
 
     async function fetchPhoto() {
       try {
+        setImagesEmpty(false);
         visibleLoader();
         const data = await getPhotos(query, page);
         console.log(data.photos);
-        setImages(prevImages => [...prevImages, ...data.photos]);
+        const newsImages = data.photos;
+
+        if (newsImages.length === 0) {
+          setImagesEmpty(true);
+          return;
+        }
+
+        setImages(prevImages => [...prevImages, ...newsImages]);
       } catch (error) {
         setErr(error.message);
       } finally {
@@ -81,13 +57,13 @@ const Photos = () => {
 
       {loader ? <Loader /> : <PhotosGallery images={images} />}
 
-      {err ? `Woops ${err}` : ''}
+      {err && <p>Woops {err}</p>}
 
-      {images.length === 0 ? (
-        ''
-      ) : (
-        <Button onClick={handleBtnMore}>Load more</Button>
-      )}
+      {!query && <p>Please enter value</p>}
+
+      {imagesEmpty && <p>Nothing found, please enter another value</p>}
+
+      {images.length > 0 && <Button onClick={handleBtnMore}>Load more</Button>}
     </>
   );
 };
